@@ -3,6 +3,7 @@ import { resolve } from 'path';
 import fs from 'fs';
 import { defineConfig } from 'vite';
 import { crx, ManifestV3Export } from '@crxjs/vite-plugin';
+import dotenv from 'dotenv';
 
 import manifest from './manifest.json';
 import devManifest from './manifest.dev.json';
