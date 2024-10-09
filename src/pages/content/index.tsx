@@ -18,3 +18,8 @@ try {
 } catch (e) {
   console.error(e);
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const bodyText = document.body.innerText;
+  console.log("Page content:", bodyText);
+})

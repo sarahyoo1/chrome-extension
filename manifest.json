@@ -18,8 +18,13 @@
   "icons": {
     "128": "icon-128.png"
   },
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "tabCapture",
+    "scripting"
   ],
   "content_scripts": [
     {
