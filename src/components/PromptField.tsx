@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { FiPaperclip } from 'react-icons/fi'
 import { BsArrowUpCircleFill } from "react-icons/bs";
 import { gemini_flash } from '@src/libs/gemini_ai';
@@ -15,7 +15,7 @@ const PromptField = ({ setChats } : { setChats: React.Dispatch<React.SetStateAct
     }
   }
 
-  const handleSubmit = (event : FormEvent<HTMLFormElement>) => {
+  const submitPrompt = (event : React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const newChat : Chat = {
       isUser: true,
@@ -50,7 +50,7 @@ const PromptField = ({ setChats } : { setChats: React.Dispatch<React.SetStateAct
   }, [isOpen]);
 
   return (
-    <form className='flex items-center gap-1.5' onSubmit={handleSubmit}>
+    <div className='flex items-center gap-1.5'>
       <div className='flex items-center gap-2 rounded-full w-full max-w-2xl bg-gray-200 p-2'>
         <div className='relative'>
           {isOpen && (
@@ -71,14 +71,14 @@ const PromptField = ({ setChats } : { setChats: React.Dispatch<React.SetStateAct
           value={prompt} 
           onChange={(e) => setPrompt(e.target.value)}
         />
-        <button type='submit' disabled={!prompt}>
+        <button disabled={!prompt} onClick={submitPrompt}>
           <BsArrowUpCircleFill 
             size={30}
             color={prompt ? 'black' : 'gray'}
           />
         </button>
       </div>
-    </form>
+    </div>
   )
 }
 
