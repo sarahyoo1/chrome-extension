@@ -5,6 +5,14 @@
   "options_ui": {
     "page": "src/pages/options/index.html"
   },
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "tabCapture",
+    "scripting",
+    "sidePanel",
+    "identity"
+  ],
   "background": {
     "service_worker": "src/pages/background/index.ts",
     "type": "module"
@@ -20,13 +28,6 @@
   },
   "host_permissions": [
     "<all_urls>"
-  ],
-  "permissions": [
-    "tabs",
-    "activeTab",
-    "tabCapture",
-    "scripting",
-    "sidePanel"
   ],
   "side_panel": {
     "default_path": "src/pages/panel/index.html"
@@ -56,5 +57,14 @@
       ],
       "matches": []
     }
-  ]
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  },
+  "oauth2": {
+    "client_id": "130167582509-hn9k3lorc9rluvm4aqqrc99icttfi9eb.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email"
+    ]
+  }
 }

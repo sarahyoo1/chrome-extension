@@ -388,3 +388,7 @@ $RECYCLE.BIN/
 
 #generated manifest
 public/manifest.json
+
+dist.crx
+dist.pem
+src/libs/firebase-config.ts
