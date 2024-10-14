@@ -12,3 +12,12 @@ export async function get_current_tab_id () : Promise<number|undefined> {
     });
   });    
 }
+
+export function open_as_side_panel() {
+  get_current_tab_id().then((tab_id) => {
+    if (typeof tab_id != "number") return;
+    chrome.sidePanel.open({windowId: tab_id});
+  })
+}
+
+chrome.sidePanel.setPanelBehavior({openPanelOnActionClick: true});

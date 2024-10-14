@@ -22,10 +22,15 @@
     "<all_urls>"
   ],
   "permissions": [
+    "tabs",
     "activeTab",
     "tabCapture",
-    "scripting"
+    "scripting",
+    "sidePanel"
   ],
+  "side_panel": {
+    "default_path": "src/pages/panel/index.html"
+  },
   "content_scripts": [
     {
       "matches": [

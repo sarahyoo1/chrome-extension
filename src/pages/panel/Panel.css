@@ -1,5 +1,6 @@
 body {
   background-color: #242424;
+  min-height: 900px;
 }
 
 .container {

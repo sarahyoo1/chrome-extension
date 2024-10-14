@@ -3,6 +3,7 @@ import { gemini_flash } from '@src/libs/gemini_ai';
 import { RotatingLines } from 'react-loader-spinner';
 import { get_blob_uri, prompts, url_to_file } from '../utils'
 import { InputOption } from '../enums';
+import { open_as_side_panel } from '../background';
 
 export default function Popup(): JSX.Element {
   //Screen Capture
@@ -56,6 +57,7 @@ export default function Popup(): JSX.Element {
       <h1 className='text-[22px] font-bold'>Quick Note AI</h1>
 
       <div className='p-4 flex flex-col gap-3'>
+        <button onClick={() => open_as_side_panel()} className='btn'>Open As Side Panel</button>
           <button onClick={take_screenshot} className='btn bg-green-500'>Scan Screen</button>
           <div className="divider">OR</div>
           <input type='file'className="file-input w-full max-w-xs"/>
