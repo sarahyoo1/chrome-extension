@@ -3,11 +3,22 @@ import { FiPaperclip } from 'react-icons/fi'
 import { BsArrowUpCircleFill } from "react-icons/bs";
 import { gemini_flash } from '@src/libs/gemini_ai';
 import { Chat } from '@src/pages/panel/ChatList';
+import { analyze_image, take_screenshot } from '@src/pages/utils';
 
 const PromptField = ({ setChats } : { setChats: React.Dispatch<React.SetStateAction<Chat[]>> } ) => {
   const [prompt, setPrompt] = useState<string>("");
+  const [shotUrl, setShotUrl] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLUListElement>(null);
+
+  const addNewChat = (isUser:boolean, content:string) => {
+    const newChat : Chat = {
+      isUser: isUser,
+      content: content,
+      timestamp: new Date().getTime()
+    };
+    setChats(prev => [...prev, newChat]);
+  }
 
   const handleClickOutside = (event : MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -15,26 +26,29 @@ const PromptField = ({ setChats } : { setChats: React.Dispatch<React.SetStateAct
     }
   }
 
+  const scanScreen = async () => {
+    const url = await take_screenshot();
+    setShotUrl(url);
+    addNewChat(false, "Scanned screen! What do you want me to do?");
+  }
+
   const submitPrompt = (event : React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    const newChat : Chat = {
-      isUser: true,
-      content: prompt,
-      timestamp: new Date().getTime()
-    };
-    setChats(prev => [...prev, newChat]);
+    addNewChat(true, prompt);
     setPrompt("");
     getAiResponse(prompt);
   }
 
   const getAiResponse = async (prompt : string) => {
-    const result = await gemini_flash.generateContent(prompt);
-    const newChat : Chat = {
-      isUser: false,
-      content: result.response.text(),
-      timestamp: new Date().getTime()
-    };
-    setChats(prev => [...prev, newChat]);
+    let response : string;
+    if (shotUrl) {
+      const result = await analyze_image(shotUrl, prompt);
+      response = result.response.text();
+    } else {
+      const result = await gemini_flash.generateContent(prompt);
+      response = result.response.text();
+    }
+    addNewChat(false, response);
   }
 
   useEffect(() => {
@@ -55,8 +69,8 @@ const PromptField = ({ setChats } : { setChats: React.Dispatch<React.SetStateAct
         <div className='relative'>
           {isOpen && (
             <ul ref={menuRef} className="menu bg-base-200 rounded-box w-56 absolute left-0 bottom-full mb-2">
-              <li><a>Item 1</a></li>
-              <li><a>Item 2</a></li>
+              <li onClick={scanScreen}><a>Scan screen</a></li>
+              <li><a>Upload file</a></li>
               <li><a>Item 3</a></li>
             </ul>
           )}
