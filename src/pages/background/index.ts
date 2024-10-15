@@ -1,7 +1,6 @@
 import { auth } from "@src/libs/firebase";
 import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
 
-
 console.log('background script loaded');
 
 export async function get_current_tab_id () {

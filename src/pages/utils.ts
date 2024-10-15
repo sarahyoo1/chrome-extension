@@ -1,6 +1,4 @@
-import { GenerateContentResult } from "@google/generative-ai";
 import { InputOption } from "./enums";
-import { gemini_flash } from "@src/libs/gemini_ai";
 
 export async function take_screenshot() : Promise<string> {
 
@@ -15,27 +13,6 @@ export async function take_screenshot() : Promise<string> {
         resolve(screenShotUrl);
     });
   })
-}
-
-export async function analyze_image(image_url:string, prompt:string) : Promise<GenerateContentResult> {
-  const file = await url_to_file(image_url);
-  return new Promise<GenerateContentResult>((resolve, reject) => {
-    get_blob_uri(file).then(async (uri) => {
-      const result = await gemini_flash.generateContent([
-        prompt,
-        {
-          inlineData: {
-            data: uri,
-            mimeType: file.type
-          }
-        }
-      ]);
-      if (!result) {
-        reject("Failed to analyze content");
-      }
-      resolve(result);
-    });
-  });
 }
 
 export async function url_to_file(url: string) {
