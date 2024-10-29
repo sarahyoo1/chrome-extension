@@ -1,23 +1,24 @@
 import '@pages/panel/Panel.css';
 import { ChatList } from './ChatList';
-import { useState } from 'react';
-import { User } from "firebase/auth";
+import { useEffect, useState } from 'react';
+import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from '../../libs/firebase';
-import { signIn } from '../background';
 
 export default function Panel(): JSX.Element {
 const [user, setUser] = useState<User | null>();
 
-  const logIn = async () => {
-    const user = await signIn();
-    setUser(user);
-  }
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+    });
 
-  const signOut = () => {
-    auth.signOut().then(() => {
-      setUser(null);
-    })
-  }
+  return unsubscribe;
+  }, []);
+
 
   return (
     <div className="flex flex-col h-full">

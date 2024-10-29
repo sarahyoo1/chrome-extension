@@ -4,3 +4,7 @@ export const enum InputOption {
     type = "type",
     none = ""
 }
+
+export const enum Actions {
+    handleAuth = 'handleAuth'
+}
