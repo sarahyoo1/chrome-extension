@@ -3,6 +3,7 @@ import { resolve } from 'path';
 import fs from 'fs';
 import { defineConfig } from 'vite';
 import { crx, ManifestV3Export } from '@crxjs/vite-plugin';
+import wasm from 'vite-plugin-wasm';
 
 import manifest from './manifest.json';
 import devManifest from './manifest.dev.json';
@@ -49,6 +50,7 @@ export default defineConfig({
     },
   },
   plugins: [
+    wasm(),
     react(),
     crx({
       manifest: extensionManifest as ManifestV3Export,
