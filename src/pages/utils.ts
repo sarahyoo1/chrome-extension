@@ -1,4 +1,4 @@
-import { InputOption } from "./enums";
+import { InputOption } from "./types";
 
 export async function take_screenshot() : Promise<string> {
 
@@ -46,6 +46,23 @@ export const prompts : Record<InputOption, string> = {
     Return: Array<TODO>;
 
     if you cannot generate any to-do, return null.
+  `,
+  [InputOption.code_analysis]:`
+    From the given image, create a problem analysis and return the result using this JSON format:
+    *When writing topics names, use space. Don't use any symbols like dash.
+    *When writing title, do not include the problem's number.
+
+    result= {
+      'title': string 
+      'description': string, 
+      'link': string,
+      'user_solution': string,
+      'difficulty': number, 
+      'space_complexity': string,
+      'time_complexity': string,
+      'topics': string[] 
+    }
+    Return result;
   `,
   [InputOption.analysis]: `Analyze the content in this image`,
   [InputOption.type]: "",

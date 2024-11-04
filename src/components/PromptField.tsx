@@ -59,7 +59,7 @@ const PromptField = ({ chat, setChatHistory, setTypingMessage} : PropsType ) => 
   const getAiResponse = async (prompt : string) => {
     let result : GenerateContentStreamResult
     if (shotUrl) {
-      result = await analyze_image(shotUrl, prompt);
+      result = await analyze_image(shotUrl, prompt); //todo: prompt selection
     } else {
       result = await chat.sendMessageStream(prompt);
     }

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { gemini_flash } from '@src/libs/gemini_ai';
 import { RotatingLines } from 'react-loader-spinner';
 import { get_blob_uri, prompts, url_to_file } from '../utils'
-import { InputOption } from '../enums';
+import { InputOption } from '../types';
 import { open_as_side_panel } from '../background';
 
 export default function Popup(): JSX.Element {
