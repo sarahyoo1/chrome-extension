@@ -4,7 +4,7 @@ import { gemini_flash } from '@src/libs/gemini_ai';
 import { Content } from '@google/generative-ai';
 
 export const ChatList = () => {
-  const [chatHistory, setChatHistory] = useState<Content[]>([{role: "user", parts: [{text: "Hello! What can I help you?"}]}]);
+  const [chatHistory, setChatHistory] = useState<Content[]>([{role: "user", parts: [{text: "Hello!"}]}]);
   const chat = gemini_flash.startChat({history: chatHistory});
   const [typingMessage, setTypingMessage] = useState<string>('');
 
