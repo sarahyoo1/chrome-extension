@@ -1,7 +1,7 @@
 {
   "name": "coding-buddy-chrome",
   "version": "1.2.0",
-  "description": "A simple chrome extension template with Vite, React, TypeScript and Tailwind CSS.",
+  "description": "An AI-driven chrome extension",
   "license": "MIT",
   "repository": {
     "type": "git",

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Quick Note AI",
-  "description": "AI virtual meeting assistance",
+  "name": "Coding Buddy",
+  "description": "Your AI learning assistant",
   "options_ui": {
     "page": "src/pages/options/index.html"
   },
