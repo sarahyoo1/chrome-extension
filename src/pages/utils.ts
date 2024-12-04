@@ -51,6 +51,7 @@ export const prompts : Record<InputOption, string> = {
     From the given image, create a problem analysis and return the result using this JSON format:
     *When writing topics names, use space. Don't use any symbols like dash.
     *When writing title, do not include the problem's number.
+    *link is the source of the problem.
 
     result= {
       'title': string 
