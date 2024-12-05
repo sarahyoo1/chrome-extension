@@ -41,12 +41,6 @@ export function strip_base64_prefix(uri: string) {
 }
 
 export const prompts : Record<InputOption, string> = {
-  [InputOption.todolist]: `From the given image, creates a to-do-list using this JSON format:
-    TODO = {'task': string, order: number}
-    Return: Array<TODO>;
-
-    if you cannot generate any to-do, return null.
-  `,
   [InputOption.code_analysis]:`
     From the given image, create a problem analysis and return the result using this JSON format:
     *When writing topics names, use space. Don't use any symbols like dash.

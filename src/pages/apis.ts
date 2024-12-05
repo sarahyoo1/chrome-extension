@@ -4,6 +4,7 @@ import { auth, db } from "@src/libs/firebase";
 import { get_blob_uri, prompts, url_to_file } from "./utils";
 import { json_model } from "@src/libs/gemini_ai";
 
+//Gemini API
 export const analyze_code = async (image_url:string) => {
     const file = await url_to_file(image_url);
     const uri = await get_blob_uri(file);

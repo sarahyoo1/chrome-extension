@@ -11,7 +11,11 @@
     "tabCapture",
     "scripting",
     "sidePanel",
-    "identity"
+    "identity",
+    "aiLanguageModelOriginTrial"
+  ],
+  "trial_tokens": [
+    "AmlSI5s5t57w8UbMpBokW6Xya+GFZG+tqmn8eSfz4sXesG1aopKIm1NOswgQO79IKktwtiBNCQl/Gyf0aeXo3w0AAAB4eyJvcmlnaW4iOiJjaHJvbWUtZXh0ZW5zaW9uOi8va2ZrYmxrbXBpbmZnaWVja2JubmFicGdlZXBmaWJhaWwiLCJmZWF0dXJlIjoiQUlQcm9tcHRBUElGb3JFeHRlbnNpb24iLCJleHBpcnkiOjE3NjA0ODYzOTl9"
   ],
   "background": {
     "service_worker": "src/pages/background/index.ts",

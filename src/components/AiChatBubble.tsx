@@ -1,6 +1,5 @@
-import React from 'react'
 
-const AiChatBubble = ({content} : {content : string | undefined}) => {
+const AiChatBubble = ({content} : {content : string | undefined }) => {
   return (
     <div className='chat chat-start'>
         <div className='chat-image avatar'>

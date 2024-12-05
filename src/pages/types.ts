@@ -1,7 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 
 export const enum InputOption {
-    todolist = "todolist",
     analysis = "analysis",
     code_analysis = "code_analysis",
     type = "type",

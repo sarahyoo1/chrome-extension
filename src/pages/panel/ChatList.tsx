@@ -1,52 +1,117 @@
 import { AiChatBubble, PromptField, UserChatBubble } from '@src/components'
 import { useEffect, useState } from 'react';
-import { gemini_flash } from '@src/libs/gemini_ai';
-import { Content } from '@google/generative-ai';
+
+declare global {
+  interface Window {
+    ai: any;
+  }
+}
+
+const checkAI = async () => {
+  if ("ai" in window) {
+    if ((await window.ai.languageModel.capabilities()).available == "readily") {
+      console.log("ai is ready")
+      return true;
+    }
+  }
+  return false;
+}
 
 export const ChatList = () => {
-  const [chatHistory, setChatHistory] = useState<Content[]>([{role: "user", parts: [{text: "Hello!"}]}]);
-  const chat = gemini_flash.startChat({history: chatHistory});
-  const [typingMessage, setTypingMessage] = useState<string>('');
+  const [endMessage, setEndMessage] = useState<null | HTMLDivElement>(null);
+  const [session, setSession] = useState({
+    prompt: async (inputValue?: string) => {},
+    execute: async (inputValue?: string) => {},
+  });
+  const [isAI, setIsAI] = useState<null | boolean>(null);
+  const [chatHistory, setChatHistory] = useState<any[]>([
+    {id: -1, role: 'assistant', text: 'Hello! What can I help you?'}
+  ]);
 
-  useEffect(() => {
-    const getHistory = async () => {
-      const history = await chat.getHistory();
-      setChatHistory(history);
-    }
-    getHistory();
-  }, []);
+  const [isResponsing, setIsResponsing] = useState(false);
+
+  const updateIsAI = async () => {
+      const checkAIStatus = await checkAI();
+
+      if (checkAIStatus) {
+        const session = await window.ai.languageModel.create({
+          initialPrompts: [
+            {role: 'assistant', content: 'Hello! What can I help you?'}
+          ]
+        });
+        setSession(session);
+      }
+
+      setIsAI(checkAIStatus);
+    };
+
+    useEffect(() => {
+      updateIsAI();
+    }, []);
+
+    useEffect(() => {
+      endMessage?.scrollIntoView({ behavior: "smooth" });
+      console.log(chatHistory)
+    }, [endMessage]);
 
   return (
+    <>
+      <div className='p-2'>
+        {isAI === null && <p>Checking your browser</p>}
+        {isAI !== null &&
+          (isAI ? (
+            <p className='text-sm font-medium leading-none text-white'>
+              Your chrome support Built-in AI. All code runs locally on your
+              computer. No internet.
+            </p>
+          ) : (
+            <p>
+              Built-in AI not work. Please check{" "}
+              <a
+                href='https://github.com/lightning-joyce/chromeai?tab=readme-ov-file#how-to-set-up-built-in-gemini-nano-in-chrome'
+                className='font-medium text-primary underline underline-offset-4'
+              >
+                this steps
+              </a>{" "}
+              to turn on Built-in AI.
+            </p>
+          ))}
+    </div> 
+
     <div className='bg-slate-50 w-11/12 rounded-3xl mx-auto flex flex-col'>
       <div className='px-2 pt-2 rounded-3xl h-[400px]'>
           <div className='overflow-y-auto w-full max-h-[400px]'>
-              {chatHistory.map((chat, index1) => (chat.role === "user" ? 
+              {chatHistory.map((chat) => (chat.role === "user" ? 
                 (
-                  chat.parts.map((message, index2) => (
-                    <UserChatBubble 
-                      key={`user_${index1}_${index2}`}
-                      content={message.text}
-                    />
-                  ))
+                  <UserChatBubble 
+                    key={chat.id}
+                    content={chat.text}
+                  />
                 ) : (
-                  chat.parts.map((message, index2) => (
+                  <div 
+                    key={chat.id}
+                    ref={(el) => {
+                      setEndMessage(el);
+                    }}
+                  >
                     <AiChatBubble 
-                      key={`ai_${index1}_${index2}`}
-                      content={message.text}
+                      content={chat.text}
                     />
-                  )))
-              ))}
-              {typingMessage && <AiChatBubble content={typingMessage}/>}
+                  </div>
+              )))}
+              {isResponsing && <AiChatBubble content={"responsing..."}/>}
           </div>
       </div>
   
       <div className='w-full px-4 pb-4 pt-2 bg-slate-50 rounded-3xl'>
         <PromptField 
-          chat={chat} 
+          session={session}
+          chatHistory={chatHistory}
           setChatHistory={setChatHistory}
-          setTypingMessage={setTypingMessage}
+          setIsResponsing={setIsResponsing}
         />
       </div>
     </div>
+    </>
   )
 }

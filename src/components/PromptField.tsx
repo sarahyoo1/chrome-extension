@@ -2,16 +2,18 @@ import { useEffect, useRef, useState } from 'react'
 import { FiPaperclip } from 'react-icons/fi'
 import { BsArrowUpCircleFill } from "react-icons/bs";
 import { get_blob_uri, take_screenshot, url_to_file } from '@src/pages/utils';
-import { ChatSession, Content, GenerateContentStreamResult, Part } from '@google/generative-ai';
+import { GenerateContentResult } from '@google/generative-ai';
+import { gemini_flash } from '@src/libs/gemini_ai';
 
 interface PropsType {
-  chat: ChatSession;
-  setChatHistory: React.Dispatch<React.SetStateAction<Content[]>>;
-  setTypingMessage: React.Dispatch<React.SetStateAction<string>>;
+  session: any;
+  chatHistory: any[],
+  setChatHistory: React.Dispatch<React.SetStateAction<any[]>>;
+  setIsResponsing: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const PromptField = ({ chat, setChatHistory, setTypingMessage} : PropsType ) => {
-  const [prompt, setPrompt] = useState<string>("");
+const PromptField = ({ session, chatHistory, setChatHistory, setIsResponsing} : PropsType ) => {
+  const [inputValue, setInputValue] = useState("");
   const [shotUrl, setShotUrl] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLUListElement>(null);
@@ -24,22 +26,34 @@ const PromptField = ({ chat, setChatHistory, setTypingMessage} : PropsType ) => 
 
   const scanScreen = async () => {
     const url = await take_screenshot();
+    setChatHistory((prev) => [
+      ...prev, {
+      id: chatHistory.length + 1,
+      role: "assistant",
+      text: "Captured screen! What do you want me to do?",
+    }]);
     setShotUrl(url);
-    addNewChat("model", [{text: "Scanned screen! What do you want me to do?"}]);
   }
 
-  const submitPrompt = (event : React.MouseEvent<HTMLButtonElement>) => {
+  const onSubmitPrompt = async (event : React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    addNewChat("user", [{text: prompt}]);
-    setPrompt("");
-    getAiResponse(prompt);
+
+    setChatHistory((prev) => [
+      ...prev, {
+      id: chatHistory.length + 1,
+      role: "user",
+      text: inputValue,
+    }]);
+    setInputValue('');
+
+    await getAiResponse(inputValue);
   }
 
   const analyze_image = async (image_url:string, prompt:string) => {
     const file = await url_to_file(image_url);
-    return new Promise<GenerateContentStreamResult>((resolve, reject) => {
+    return new Promise<GenerateContentResult>((resolve, reject) => {
       get_blob_uri(file).then(async (uri) => {
-        const result = await chat.sendMessageStream([
+        const result = await gemini_flash.generateContent([
           prompt,
           {
             inlineData: {
@@ -56,24 +70,21 @@ const PromptField = ({ chat, setChatHistory, setTypingMessage} : PropsType ) => 
     });
   }
 
-  const getAiResponse = async (prompt : string) => {
-    let result : GenerateContentStreamResult
+  const getAiResponse = async (inputValue : string) => {
+    setIsResponsing(true);
+    let result : string = "";
     if (shotUrl) {
-      result = await analyze_image(shotUrl, prompt); //todo: prompt selection
+      result = (await (await analyze_image(shotUrl, inputValue)).response).text(); //todo: prompt selection
     } else {
-      result = await chat.sendMessageStream(prompt);
+      result = await session.prompt(inputValue); 
     }
-    for await (const chunk of result.stream) {
-      if (!chunk.candidates) continue;
-      const text = chunk.candidates[0].content.parts[0].text;
-      setTypingMessage(prev => prev + text);
-    }
-    addNewChat("model", [{text: (await result.response).text()}]);
-    setTypingMessage('');
-  }
-
-  const addNewChat = (role: string, parts: Part[]) => {
-    setChatHistory(prev => [...prev, {role: role, parts: parts}]);
+    setIsResponsing(false);
+    setChatHistory((prev) => [
+      ...prev, {
+      id: chatHistory.length + 1,
+      role: "assistant",
+      text: result,
+    }]);
   }
 
   useEffect(() => {
@@ -107,13 +118,13 @@ const PromptField = ({ chat, setChatHistory, setTypingMessage} : PropsType ) => 
           type='text' 
           placeholder='Message Ai' 
           className='w-full focus-within:outline-none border-none bg-gray-200' 
-          value={prompt} 
-          onChange={(e) => setPrompt(e.target.value)}
+          value={inputValue} 
+          onChange={(e) => setInputValue(e.target.value)}
         />
-        <button disabled={!prompt} onClick={submitPrompt}>
+        <button disabled={!inputValue} onClick={onSubmitPrompt}>
           <BsArrowUpCircleFill 
             size={30}
-            color={prompt ? 'black' : 'gray'}
+            color={inputValue ? 'black' : 'gray'}
           />
         </button>
       </div>
