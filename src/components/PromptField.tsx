@@ -129,6 +129,7 @@ const PromptField = ({ session, chatHistory, setChatHistory, setIsResponsing} : 
           />
         </button>
       </div>
+
     </div>
   )
 }

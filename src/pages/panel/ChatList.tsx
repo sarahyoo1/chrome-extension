@@ -1,5 +1,7 @@
 import { AiChatBubble, PromptField, UserChatBubble } from '@src/components'
 import { useEffect, useState } from 'react';
+import { analyze_code, add_problem } from '../apis';
+import { take_screenshot } from '../utils';
 
 declare global {
   interface Window {
@@ -45,6 +47,22 @@ export const ChatList = () => {
       setIsAI(checkAIStatus);
     };
 
+    const onSaveProblem = async () => {
+      try {
+        const url = await take_screenshot();
+        const result = await analyze_code(url);
+        await add_problem(result);
+        setChatHistory((prev) => [
+          ...prev, {
+          id: chatHistory.length + 1,
+          role: "assistant",
+          text: "Successfully saved the problem!",
+        }]);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    
     useEffect(() => {
       updateIsAI();
     }, []);
@@ -110,6 +128,7 @@ export const ChatList = () => {
           setChatHistory={setChatHistory}
           setIsResponsing={setIsResponsing}
         />
+        <button onClick={onSaveProblem} className='btn w-full'>Save Problem</button>
       </div>
     </div>
     </>
