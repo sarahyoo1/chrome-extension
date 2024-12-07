@@ -75,6 +75,7 @@ const PromptField = ({ session, chatHistory, setChatHistory, setIsResponsing} : 
     let result : string = "";
     if (shotUrl) {
       result = (await (await analyze_image(shotUrl, inputValue)).response).text(); //todo: prompt selection
+      setShotUrl("");
     } else {
       result = await session.prompt(inputValue); 
     }

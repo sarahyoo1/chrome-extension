@@ -56,20 +56,20 @@ export const ChatList = () => {
 
   return (
     <>
-      <div className='p-2'>
+      <div className='p-2 text-white'>
         {isAI === null && <p>Checking your browser</p>}
         {isAI !== null &&
           (isAI ? (
-            <p className='text-sm font-medium leading-none text-white'>
+            <p className='text-sm font-medium leading-none'>
               Your chrome support Built-in AI. All code runs locally on your
               computer. No internet.
             </p>
           ) : (
             <p>
-              Built-in AI not work. Please check{" "}
+              Your chrome does not support Built-in AI. Please check{" "}
               <a
                 href='https://github.com/lightning-joyce/chromeai?tab=readme-ov-file#how-to-set-up-built-in-gemini-nano-in-chrome'
-                className='font-medium text-primary underline underline-offset-4'
+                className='font-medium text-red-500 underline underline-offset-4'
               >
                 this steps
               </a>{" "}

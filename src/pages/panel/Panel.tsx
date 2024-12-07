@@ -22,7 +22,7 @@ const [successful, setSuccessful] = useState(false);
     })
   }
 
- const onClickCode = async () => {
+ const onSaveProblem = async () => {
   try {
     const url = await take_screenshot();
     const result = await analyze_code(url);
@@ -36,7 +36,7 @@ const [successful, setSuccessful] = useState(false);
   return (
     <div className="flex flex-col h-full">
       <ChatList />
-      <button onClick={onClickCode} className='btn'>Save Problem</button>
+      <button onClick={onSaveProblem} className='btn'>Save Problem</button>
       {successful&&(
         <span className='text-white font-semibold'>Succeeded to add problem</span>
       )}
