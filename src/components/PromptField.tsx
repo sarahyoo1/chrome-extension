@@ -79,13 +79,16 @@ const PromptField = ({ session, chatHistory, setChatHistory, setIsResponsing} : 
     } else {
       result = await session.prompt(inputValue); 
     }
-    setIsResponsing(false);
-    setChatHistory((prev) => [
-      ...prev, {
-      id: chatHistory.length + 1,
-      role: "assistant",
-      text: result,
-    }]);
+
+    if (result) {
+      setIsResponsing(false);
+      setChatHistory((prev) => [
+        ...prev, {
+        id: chatHistory.length + 1,
+        role: "assistant",
+        text: result,
+      }]);
+    }
   }
 
   useEffect(() => {

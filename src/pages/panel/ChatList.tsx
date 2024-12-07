@@ -29,7 +29,6 @@ export const ChatList = () => {
   const [chatHistory, setChatHistory] = useState<any[]>([
     {id: -1, role: 'assistant', text: 'Hello! What can I help you?'}
   ]);
-
   const [isResponsing, setIsResponsing] = useState(false);
 
   const updateIsAI = async () => {
@@ -43,7 +42,6 @@ export const ChatList = () => {
         });
         setSession(session);
       }
-
       setIsAI(checkAIStatus);
     };
 
